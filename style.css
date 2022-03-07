@@ -237,6 +237,10 @@ body {
 	color: white;
 }
 
+.highlight {
+    background-color: var(--right) !important;
+}
+
 button#share-button {
     background-color: var(--right);
 	color: var(--text);

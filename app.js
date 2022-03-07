@@ -148,13 +148,12 @@ async function check_guess() {
         await new Promise(r => setTimeout(r, 2000));
         let modal = document.getElementById("stats_modal")
         modal.style.display = "block";
-        current_guess += 1;
     } else {
-        current_guess += 1;
         let a = create_reveal(guess, "wrong");
         guess_div.appendChild(a);
-        reveal_clue(current_guess);
     }
+
+    current_guess += 1;
 
     // reset the input
     document.getElementById("movie_guess").value = "";
@@ -168,11 +167,13 @@ async function check_guess() {
         localStorage.setItem("streak", 0);
 
         display_solution();
+    } else {
+        reveal_clue(current_guess);
     }
 }
 
 async function display_solution() {
-    await new Promise(r => setTimeout(r, 3000));
+    await new Promise(r => setTimeout(r, 1000));
     document.getElementById("solution-container").classList.remove("hide");
 
     let guess_div = document.getElementById("solution")
@@ -235,7 +236,7 @@ function movlie_number() {
     const now = new Date();  
     now.setUTCHours(0, 0, 0, 0);  // go by utc
 
-    let day = Math.floor(now/8.64e7) - 19056;
+    let day = Math.floor(now/8.64e7) - 19057;
     return day;
 }
 
