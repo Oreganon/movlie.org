@@ -237,6 +237,10 @@ body {
 	color: white;
 }
 
+.selected {
+    outline: 1px solid var(--right);
+}
+
 .highlight {
     background-color: var(--right) !important;
 }
@@ -288,7 +292,13 @@ img {
     max-width: 100%;
 }
 
+.disabled {
+    color: var(--gray);
+    cursor: not-allowed;
+}
+
 :root {
+  --gray: #9b9b9b;
   --right: #538d4e;
   --text: #fff;
   --wrong: #3a3a3c;

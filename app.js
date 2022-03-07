@@ -5,6 +5,14 @@ async function get_movies() {
     return await response.json();
 }
 
+async function get_votes(id) {
+    let response = await fetch("/screenshots/" + id + "/votes.json");
+    if (response.status == 404) {
+        return {Votes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]};
+    }
+    return await response.json();
+}
+
 async function flash(text) {
     let flash_element = document.getElementById("flasher");
     flash_element.innerText = text;
@@ -250,6 +258,17 @@ function share() {
 }
 
 function reveal_clue(index) {
+    let votes_with_index = [];
+    for (let i = 0; i <= 15; ++i) {
+        votes_with_index.push([votes[i], i])
+    }
+
+    votes_with_index = votes_with_index.sort(function(a,b) {
+        return a[0] < b[0];
+    });
+
+    index = votes_with_index[index][1];
+
     let img = document.getElementById("clue" + index);
     img.src = "screenshots/" + solution_imdb + "/" + index + ".png"
 }
@@ -272,6 +291,9 @@ async function main() {
     window.solution_index = Number(todays_movie(solution_eligible));
     window.solution = names[solution_index];
     window.solution_imdb = imdb_ids[solution_index];
+
+    window.votes = await get_votes(solution_imdb);
+    votes = votes.Votes; // array of votes corresponding to screenshot votes
 
     reveal_clue(0);
     // guess by click on guess
