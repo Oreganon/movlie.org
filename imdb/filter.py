@@ -13,5 +13,5 @@ for m in j:
     filtered.append([m[0], m[1], "true" if m[0] in exists else "false"])
 
 
-with open("movies.json", "w") as f:
+with open("../movies.json", "w") as f:
     f.write(json.dumps(filtered))
