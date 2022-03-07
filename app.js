@@ -126,7 +126,7 @@ async function check_guess() {
     let guess_div = document.getElementById("guess" + current_guess);
     guess_div.innerHTML = "";
 
-    if (guess == solution) {
+    if (guess_lowercase == solution.toLowerCase()) {
         let a = create_reveal(guess, "right");
         guess_div.appendChild(a);
 
