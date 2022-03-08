@@ -198,23 +198,8 @@ function reveal_clue(index) {
 }
 
 async function main() {
-    window.current_guess = 0;
-    window.movies = await get_movies();
-    window.names = [];
-    window.imdb_ids = [];
-    let solution_eligible = [];
-    for (let i = 0; i < movies.length ; ++i) {
-        names.push(movies[i][1]);
-        imdb_ids.push(movies[i][0]);
-        if (movies[i][2] == "true") {
-            solution_eligible.push(i);
-        }
-    }
-
-    // find the solution, always the same for the whole UTC day
-    window.solution_index = Number(todays_movie(solution_eligible));
-    window.solution = names[solution_index];
-    window.solution_imdb = imdb_ids[solution_index];
+    // setup global variables like todays solution
+    await setup_globals();
 
     window.votes = await get_votes(solution_imdb);
     votes = votes.Votes; // array of votes corresponding to screenshot votes

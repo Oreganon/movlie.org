@@ -1,3 +1,5 @@
+
+
 async function get_movies() {
     let response = await fetch("movies.json");
     return await response.json();
@@ -81,13 +83,16 @@ function shuffle(a) {
     return a;
 }
 
-function todays_movie(imdb_ids) {
-    let shuffled = shuffle(imdb_ids);
-    const now = new Date();  
-    now.setUTCHours(0, 0, 0, 0);  // go by utc
+function todays_movie(indexes, ids) {
+    let today = movlie_number();
 
-    let days_since_epoch = Math.floor(now/8.64e7);
-    return shuffled[days_since_epoch % (shuffled.length - 1)];
+    let predefined = ["IGNORE", "tt1065073"];
+
+    if (today < predefined.length) {
+        return indexes[ids.indexOf(predefined[today])];
+    }
+    let shuffled = shuffle(indexes);
+    return shuffled[today % (shuffled.length - 1)];
 }
 
 let modals = document.getElementsByClassName("modal");
@@ -118,3 +123,25 @@ window.onclick = function(event) {
     }
 } 
 
+
+async function setup_globals() {
+    window.current_guess = 0;
+    window.movies = await get_movies();
+    window.names = [];
+    window.imdb_ids = [];
+    let solution_eligible_ids = [];
+    let solution_eligible_indexes = [];
+    for (let i = 0; i < movies.length ; ++i) {
+        names.push(movies[i][1]);
+        imdb_ids.push(movies[i][0]);
+        if (movies[i][2] == "true") {
+            solution_eligible_ids.push(movies[i][0]);
+            solution_eligible_indexes.push(i);
+        }
+    }
+
+    // find the solution, always the same for the whole UTC day
+    window.solution_index = Number(todays_movie(solution_eligible_indexes, solution_eligible_ids));
+    window.solution = names[solution_index];
+    window.solution_imdb = imdb_ids[solution_index];
+}

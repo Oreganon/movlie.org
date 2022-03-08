@@ -62,30 +62,13 @@ function submit() {
 
 
 async function main() {
-    window.current_guess = 0;
-    window.movies = await get_movies();
-    window.names = [];
-    window.imdb_ids = [];
+    await setup_globals();
 
     const last_won = parseInt(localStorage.getItem("last_won")) || 0;
     if (last_won != movlie_number()) {
         document.getElementById("cheat").classList.remove("hide");
         return;
     }
-
-    let solution_eligible = [];
-    for (let i = 0; i < movies.length ; ++i) {
-        names.push(movies[i][1]);
-        imdb_ids.push(movies[i][0]);
-        if (movies[i][2] == "true") {
-            solution_eligible.push(i);
-        }
-    }
-
-    // find the solution, always the same for the whole UTC day
-    window.solution_index = Number(todays_movie(solution_eligible));
-    window.solution = names[solution_index];
-    window.solution_imdb = imdb_ids[solution_index];
 
     document.getElementById("name").innerHTML = solution;
 
