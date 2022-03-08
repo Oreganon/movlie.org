@@ -8,8 +8,7 @@
 }
 
 input {
-    width: 100%;
-    max-width: 90%;
+    width: calc(100% - 8em);
 }
 
 a {
