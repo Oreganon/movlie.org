@@ -93,30 +93,33 @@ function create_reveal(movie, type) {
     return elem;
 }
 
-function add_delay(element, index) {
-    let delay_class = "delay" + index;
-    element.classList.add(delay_class);
-}
-
-async function jump(delayed, guess_div) {
-    await new Promise(r => setTimeout(r, delayed));
-    for (var child of guess_div.childNodes) {
-        for (let j = 0; j < 20 ; ++j) {
-            child.classList.remove("delay" + j);
-        }
-        await new Promise(r => setTimeout(r, 80));
-        child.classList.add("jump");
-    }
- 
-    await new Promise(r => setTimeout(r, 1000));
-    let modal = document.getElementById("stats_modal")
-    modal.style.display = "block";
-}
-
-
-async function check_guess() {
+// function to check guesses, called by user input
+function check_guess() {
     let guess_input = document.getElementById("movie_guess");
     let guess = guess_input.value;
+
+    check_guessed_movie(guess);
+
+    // misc to be able to restore the progress
+    const stored = parseInt(localStorage.getItem("last_played")) || 0;
+    if (stored != movlie_number()) {
+        // a new day
+        localStorage.setItem("last_played", movlie_number());
+        let guesses = [];
+        guesses.push(guess);
+        localStorage.setItem("guesses", JSON.stringify(guesses));
+        return;
+    } else {
+        // add the guess to the list
+        let guesses = JSON.parse(localStorage.getItem("guesses")) || [];
+        guesses.push(guess)
+        localStorage.setItem("guesses", JSON.stringify(guesses));
+    }
+}
+
+// guess is the name of the movie, any case
+// can be called when restoring progress
+async function check_guessed_movie(guess) {
     let guess_lowercase = guess.toLowerCase();
     let names_lowercase = names.map(x => x.toLowerCase());
 
@@ -167,7 +170,7 @@ async function check_guess() {
     document.getElementById("movie_guess").value = "";
 
 
-    if (current_guess == TRIES) {
+    if (current_guess == TRIES && guess_lowercase != solution.toLowerCase()) {
         // Riperino
         let stored = parseInt(localStorage.getItem("played")) || 0;
         localStorage.setItem("played", stored + 1);
@@ -269,7 +272,7 @@ function reveal_clue(index) {
 
     index = votes_with_index[index][1];
 
-    let img = document.getElementById("clue" + index);
+    let img = document.getElementById("clue" + current_guess);
     img.src = "screenshots/" + solution_imdb + "/" + index + ".png"
 }
 
@@ -296,6 +299,8 @@ async function main() {
     votes = votes.Votes; // array of votes corresponding to screenshot votes
 
     reveal_clue(0);
+
+
     // guess by click on guess
     let button = document.getElementById("submit");
     button.addEventListener('click', check_guess);
@@ -309,6 +314,7 @@ async function main() {
     });
 
     update_statistics();
+    restore_progress();
 
     // initialize the statistics
     let played = parseInt(localStorage.getItem("played")) || 0;
@@ -324,6 +330,20 @@ async function main() {
     countdown();
 }
 main()
+
+
+function restore_progress() {
+    const stored = parseInt(localStorage.getItem("last_played")) || 0;
+
+    if (stored != movlie_number()) {
+        // new day, nothing to do here
+        return;
+    }
+    let guesses = JSON.parse(localStorage.getItem("guesses")) || [];
+    for (let g of guesses) {
+        check_guessed_movie(g);
+    }
+}
 
 let modals = document.getElementsByClassName("modal");
 let openers = document.getElementsByClassName("modal_open");
