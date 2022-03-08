@@ -86,7 +86,7 @@ function shuffle(a) {
 function todays_movie(indexes, ids) {
     let today = movlie_number();
 
-    let predefined = ["IGNORE", "tt1065073"];
+    let predefined = ["tt3450958", "tt3397884", "tt7349662", "tt1210166", "tt2278388"];
 
     if (today < predefined.length) {
         return indexes[ids.indexOf(predefined[today])];
