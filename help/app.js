@@ -65,7 +65,8 @@ async function main() {
     await setup_globals();
 
     const last_won = parseInt(localStorage.getItem("last_won")) || 0;
-    if (last_won != movlie_number()) {
+    const last_lost = parseInt(localStorage.getItem("last_lost")) || 0;
+    if (last_won != movlie_number() && last_lost != movlie_number()) {
         document.getElementById("cheat").classList.remove("hide");
         return;
     }

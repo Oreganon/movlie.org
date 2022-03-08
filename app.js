@@ -76,7 +76,7 @@ async function check_guessed_movie(guess) {
             localStorage.setItem("total-"+current_guess, total + 1);
 
             // store the current day
-            const last_won = localStorage.setItem("last_won", movlie_number()); 
+            localStorage.setItem("last_won", movlie_number()); 
         }
         document.getElementById("total-graph-"+current_guess).classList.add("highlight");
         document.getElementById("stats-footer").classList.remove("hide");
@@ -102,6 +102,7 @@ async function check_guessed_movie(guess) {
 
     if (current_guess == TRIES && guess_lowercase != solution.toLowerCase()) {
         // Riperino
+        localStorage.setItem("last_lost", movlie_number()); 
         let stored = parseInt(localStorage.getItem("played")) || 0;
         localStorage.setItem("played", stored + 1);
         stored = parseInt(localStorage.getItem("streak")) || 0;
