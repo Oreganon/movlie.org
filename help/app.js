@@ -100,7 +100,7 @@ function submit() {
         return;
     }
 
-    const url = "http://localhost:8080/submit";
+    const url = "/submit";
     fetch(url, {
         method : "POST",
          body : JSON.stringify({
