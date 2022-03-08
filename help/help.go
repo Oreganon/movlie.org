@@ -7,6 +7,7 @@ import (
     "net/http"
     "io/ioutil"
     "os"
+    "sync"
 )
 
 type test_struct struct {
@@ -22,6 +23,9 @@ func exists(path string) bool {
     _, err := os.Stat(path)
     return !errors.Is(err, os.ErrNotExist)
 }
+
+
+var m sync.Mutex
 
 func test(rw http.ResponseWriter, req *http.Request) {
     body, err := ioutil.ReadAll(req.Body)
@@ -46,6 +50,7 @@ func test(rw http.ResponseWriter, req *http.Request) {
             log.Fatal(err)
         }
     }
+    m.Lock()
     
     var content, err2 = ioutil.ReadFile(votes)
 	if err2 != nil {
@@ -66,6 +71,7 @@ func test(rw http.ResponseWriter, req *http.Request) {
     if err != nil {
         log.Fatal(err)
     }
+    m.Unlock()
 
 }
 
