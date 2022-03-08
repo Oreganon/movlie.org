@@ -142,23 +142,34 @@ async function check_guessed_movie(guess) {
         guess_div.appendChild(a);
 
         
-        let stats = ["played", "win", "streak", "max-streak"];
-        for (var stat of stats) {
-            const stored = parseInt(localStorage.getItem(stat)) || 0;
-            localStorage.setItem(stat, stored + 1);
-        }
+        const last_won = parseInt(localStorage.getItem("last_won")) || 0;
+        // only update the statistics if we didnt refresh
+        // (the first time this is reached)
+        if (last_won != movlie_number()) {
 
-        // for the graph
-        let total = parseInt(localStorage.getItem("total-" + current_guess)) || 0;
-        localStorage.setItem("total-"+current_guess, total + 1);
+            // update the statistics 
+            let stats = ["played", "win", "streak", "max-streak"];
+            for (var stat of stats) {
+                const stored = parseInt(localStorage.getItem(stat)) || 0;
+                localStorage.setItem(stat, stored + 1);
+            }
+            let total = parseInt(localStorage.getItem("total-" + current_guess)) || 0;
+            localStorage.setItem("total-"+current_guess, total + 1);
+
+            // store the current day
+            const last_won = localStorage.setItem("last_won", movlie_number()); 
+        }
         document.getElementById("total-graph-"+current_guess).classList.add("highlight");
         document.getElementById("stats-footer").classList.remove("hide");
 
         update_statistics();   
+        document.getElementById("help-tagging").classList.remove("hide");
 
         await new Promise(r => setTimeout(r, 2000));
         let modal = document.getElementById("stats_modal")
         modal.style.display = "block";
+
+
     } else {
         let a = create_reveal(guess, "wrong");
         guess_div.appendChild(a);
@@ -247,7 +258,7 @@ function movlie_number() {
     const now = new Date();  
     now.setUTCHours(0, 0, 0, 0);  // go by utc
 
-    let day = Math.floor(now/8.64e7) - 19057;
+    let day = Math.floor(now/8.64e7) - 19058;
     return day;
 }
 
@@ -255,7 +266,7 @@ function share() {
     let message = "Movlie.org ";
 
     let day = movlie_number();
-    message += "" + day + " " + current_guess + "/6\n";
+    message += "#" + day + " " + current_guess + "/6\n";
     updateClipboard(message);
     flash("Copied to clipboard");
 }
