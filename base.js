@@ -88,7 +88,7 @@ function todays_movie(indexes, ids) {
 
     let predefined = ["tt3450958", "tt3397884", "tt7349662", "tt1210166", "tt2278388"];
 
-    if (today < predefined.length) {
+    if (today < predefined.length && location.hostname != "localhost") {
         return indexes[ids.indexOf(predefined[today])];
     }
     let shuffled = shuffle(indexes);
