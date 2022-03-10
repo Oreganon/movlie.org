@@ -75,13 +75,18 @@ Random.prototype.nextFloat = function (opt_minOrMax, opt_max) {
  * https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array/6274381#6274381
  */
 function shuffle(a) {
-    let rand = new Random(1);
+    return shuffle_with_seed(a, 1);
+}
+
+function shuffle_with_seed(a, seed) {
+    let rand = new Random(seed);
     for (let i = a.length - 1; i > 0; i--) {
         const j = Math.floor(rand.nextFloat() * (i + 1));
         [a[i], a[j]] = [a[j], a[i]];
     }
     return a;
 }
+
 
 function todays_movie(indexes, ids) {
     let today = movlie_number();

@@ -182,7 +182,13 @@ function share() {
     flash("Copied to clipboard");
 }
 
-function reveal_clue(index) {
+function show_image(id) {
+    let img = document.getElementById("clue" + current_guess);
+    img.src = "screenshots/" + solution_imdb + "/" + id + ".png"
+}
+
+// reveal clues by vote results
+function reveal_clue_popularity(index) {
     let votes_with_index = [];
     for (let i = 0; i <= 15; ++i) {
         votes_with_index.push([votes[i], i])
@@ -193,9 +199,18 @@ function reveal_clue(index) {
     });
 
     index = votes_with_index[index][1];
+    show_image(index);
+}
 
-    let img = document.getElementById("clue" + current_guess);
-    img.src = "screenshots/" + solution_imdb + "/" + index + ".png"
+// reveal clues in a fixed random order
+// different order each day but same for all users
+function reveal_clue_random(index) {
+    let id = shuffle_with_seed([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], movlie_number())[index];
+    show_image(id);
+}
+
+function reveal_clue(index) {
+    reveal_clue_random(index);
 }
 
 async function main() {
