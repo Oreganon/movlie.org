@@ -150,3 +150,10 @@ async function setup_globals() {
     window.solution = names[solution_index];
     window.solution_imdb = imdb_ids[solution_index];
 }
+
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+}

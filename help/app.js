@@ -62,14 +62,20 @@ function submit() {
 
 
 async function main() {
-    await setup_globals();
-
-    const last_won = parseInt(localStorage.getItem("last_won")) || 0;
-    const last_lost = parseInt(localStorage.getItem("last_lost")) || 0;
-    if (last_won != movlie_number() && last_lost != movlie_number()) {
-        document.getElementById("cheat").classList.remove("hide");
-        return;
+    window.movies = await get_movies();
+    window.names = [];
+    window.imdb_ids = [];
+    for (let i = 0; i < movies.length ; ++i) {
+        if (movies[i][2] == "true") {
+            names.push(movies[i][1]);
+            imdb_ids.push(movies[i][0]);
+        }
     }
+
+    // find the solution, always the same for the whole UTC day
+    let index = getRandomInt(0, names.length);
+    window.solution = names[index];
+    window.solution_imdb = imdb_ids[index];
 
     document.getElementById("name").innerHTML = solution;
 
