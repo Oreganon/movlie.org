@@ -217,8 +217,9 @@ async function main() {
     // setup global variables like todays solution
     await setup_globals();
 
-    window.votes = await get_votes(solution_imdb);
-    votes = votes.Votes; // array of votes corresponding to screenshot votes
+    // dont use votes anymore for random votes
+    //window.votes = await get_votes(solution_imdb);
+    //votes = votes.Votes; // array of votes corresponding to screenshot votes
 
     reveal_clue(0);
 
