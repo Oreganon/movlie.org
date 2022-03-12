@@ -82,7 +82,6 @@ async function check_guessed_movie(guess) {
         document.getElementById("stats-footer").classList.remove("hide");
 
         update_statistics();   
-        document.getElementById("help-tagging").classList.remove("hide");
 
         await new Promise(r => setTimeout(r, 2000));
         let modal = document.getElementById("stats_modal")
