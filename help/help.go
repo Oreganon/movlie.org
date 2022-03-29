@@ -51,7 +51,7 @@ func test(rw http.ResponseWriter, req *http.Request) {
         }
     }
     m.Lock()
-    
+
     var content, err2 = ioutil.ReadFile(votes)
 	if err2 != nil {
 		log.Fatal(err)
@@ -77,6 +77,6 @@ func test(rw http.ResponseWriter, req *http.Request) {
 
 func main() {
     http.HandleFunc("/submit", test)
-    log.Fatal(http.ListenAndServe(":8080", nil))
+    log.Fatal(http.ListenAndServe(":5000", nil))
 }
 
