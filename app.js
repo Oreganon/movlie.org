@@ -12,13 +12,7 @@ function create_reveal(movie, type) {
     return elem;
 }
 
-// function to check guesses, called by user input
-function check_guess() {
-    let guess_input = document.getElementById("movie_guess");
-    let guess = guess_input.value;
-
-    check_guessed_movie(guess);
-
+function store_guess(guess) {
     // misc to be able to restore the progress
     const stored = parseInt(localStorage.getItem("last_played")) || 0;
     if (stored != movlie_number()) {
@@ -36,6 +30,22 @@ function check_guess() {
     }
 }
 
+// function to check guesses, called by user input
+function check_guess() {
+    let guess_input = document.getElementById("movie_guess");
+    let guess = guess_input.value;
+
+    check_guessed_movie(guess);
+
+    store_guess(guess);
+}
+
+function skip() {
+    let guess = "SKIP"
+    check_guessed_movie(guess);
+    store_guess(guess);
+}
+
 // guess is the name of the movie, any case
 // can be called when restoring progress
 async function check_guessed_movie(guess) {
@@ -45,7 +55,7 @@ async function check_guessed_movie(guess) {
     if (guess == "") {
         flash("No input");
         return;
-    } else if (!names_lowercase.includes(guess_lowercase)) {
+    } else if (!names_lowercase.includes(guess_lowercase) && guess != "SKIP") {
         flash("This movie is not in the list");
         return;
     } else if (current_guess == TRIES) {
@@ -60,6 +70,9 @@ async function check_guessed_movie(guess) {
         let a = create_reveal(guess, "right");
         guess_div.appendChild(a);
 
+        for (let i = 0; i < 6; ++i) {
+            reveal_clue(i);
+        }
         
         const last_won = parseInt(localStorage.getItem("last_won")) || 0;
         // only update the statistics if we didnt refresh
@@ -181,9 +194,13 @@ function share() {
     flash("Copied to clipboard");
 }
 
-function show_image(id) {
-    let img = document.getElementById("clue" + current_guess);
+function show_xth_image(id, x) {
+    let img = document.getElementById("clue" + x);
     img.src = "screenshots/" + solution_imdb + "/" + id + ".png"
+}
+
+function show_image(id) {
+    show_xth_image(id, current_guess);
 }
 
 // reveal clues by vote results
@@ -197,15 +214,15 @@ function reveal_clue_popularity(index) {
         return a[0] < b[0];
     });
 
-    index = votes_with_index[index][1];
-    show_image(index);
+    let id = votes_with_index[index][1];
+    show_image(id, index);
 }
 
 // reveal clues in a fixed random order
 // different order each day but same for all users
 function reveal_clue_random(index) {
     let id = shuffle_with_seed([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], movlie_number())[index];
-    show_image(id);
+    show_xth_image(id, index);
 }
 
 function reveal_clue(index) {
@@ -226,6 +243,8 @@ async function main() {
     // guess by click on guess
     let button = document.getElementById("submit");
     button.addEventListener('click', check_guess);
+    button = document.getElementById("skip");
+    button.addEventListener('click', skip);
 
     // guess by enter (keyCode 13)
     const input = document.getElementById("movie_guess");
